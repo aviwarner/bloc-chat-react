@@ -1,5 +1,6 @@
 import React, { Component } from 'react';
 import RoomList from './components/RoomList';
+import MessageList from './components/MessageList';
 import './App.css';
 import * as firebase from 'firebase';
 
@@ -15,16 +16,34 @@ import * as firebase from 'firebase';
   firebase.initializeApp(config);
 
 class App extends Component {
+  constructor(props) {
+    super(props);
+    this.state = {
+      activeRoom: ''
+    };
+  }
+
+  setActiveRoom(room) {
+    this.setState({ activeRoom: room });
+  }
+
   render() {
     return (
       <div className="App container-fluid p-0 h-100">
         <div className="row p-0 h-100">
           <div className="col-4 p-0 h-100">
-            <RoomList firebase={firebase} />
+            <RoomList
+              firebase={firebase}
+              activeRoom={this.state.activeRoom}
+              setActiveRoom={(room) => this.setActiveRoom(room)}
+            />
           </div>
           <div className="col-8 p-0 h-100 bg-light">
             <section className="container">
-              <h3>chat room content here</h3>
+              <MessageList
+                firebase={firebase}
+                activeRoom={this.state.activeRoom}
+              />
             </section>
           </div>
         </div>

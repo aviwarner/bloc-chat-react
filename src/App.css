@@ -6,7 +6,16 @@ html,body {
   border-color: rgb(248, 249, 250);
 }
 
+.chat-divider {
+  /* border-color: black; */
+}
+
 .room-list-item {
   padding: 0.5rem 0 0.5rem 0;
   font-weight: 200;
+  cursor: pointer;
+}
+
+.active-room {
+  font-weight: 400;
 }
