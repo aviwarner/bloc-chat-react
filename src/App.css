@@ -2,6 +2,10 @@ html,body {
   height: 100%;
 }
 
+body {
+  padding-top: 50px;
+}
+
 .room-divider {
   border-color: rgb(248, 249, 250);
 }
@@ -18,4 +22,8 @@ html,body {
 
 .active-room {
   font-weight: 400;
+}
+
+.nav-user {
+  height: 40px;
 }

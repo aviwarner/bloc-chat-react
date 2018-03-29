@@ -1,6 +1,7 @@
 import React, { Component } from 'react';
 import RoomList from './components/RoomList';
 import MessageList from './components/MessageList';
+import User from './components/User';
 import './App.css';
 import * as firebase from 'firebase';
 
@@ -19,8 +20,13 @@ class App extends Component {
   constructor(props) {
     super(props);
     this.state = {
-      activeRoom: ''
+      activeRoom: '',
+      currentUser: ''
     };
+  }
+
+  setUser(user) {
+    this.setState({ currentUser: user ? user.displayName : "Guest"});
   }
 
   setActiveRoom(room) {
@@ -30,6 +36,14 @@ class App extends Component {
   render() {
     return (
       <div className="App container-fluid p-0 h-100">
+        <nav className="navbar navbar-dark bg-dark navbar-expand-sm fixed-top justify-content-between">
+          <a className="navbar-brand" href="/">Bloc Chat: React</a>
+          <User
+            firebase={firebase}
+            currentUser={this.state.currentUser}
+            setUser={(user) => this.setUser(user)}
+          />
+        </nav>
         <div className="row p-0 h-100">
           <div className="col-4 p-0 h-100">
             <RoomList

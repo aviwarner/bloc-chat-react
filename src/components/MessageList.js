@@ -30,7 +30,7 @@ class MessageList extends Component {
 
     return(
       <section className="container-fluid bg-light h-100 p-4">
-        <h2>{this.props.activeRoom ? this.props.activeRoom.name : 'Pick a room'}</h2>
+        <h3>{this.props.activeRoom ? this.props.activeRoom.name : 'Pick a room'}</h3>
         <hr className="chat-divider"></hr>
         {
           messages.map( (message, index) =>
