@@ -53,10 +53,11 @@ class App extends Component {
             />
           </div>
           <div className="col-8 p-0 h-100 bg-light">
-            <section className="container">
+            <section className="container-fluid px-0 h-100">
               <MessageList
                 firebase={firebase}
                 activeRoom={this.state.activeRoom}
+                currentUser={this.state.currentUser}
               />
             </section>
           </div>

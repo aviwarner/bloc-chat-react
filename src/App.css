@@ -1,5 +1,5 @@
 html,body {
-  height: 100%;
+  height: 100vh;
 }
 
 body {
@@ -26,4 +26,25 @@ body {
 
 .nav-user {
   height: 40px;
+}
+
+.chat-log {
+}
+
+.chat-window {
+  overflow-y: scroll;
+  height: 100vh;
+  padding-bottom: 10rem;
+}
+
+.messagbox {
+  /* position: absolute;
+  bottom: 0px;
+  border-radius: 0px; */
+}
+
+.footer {
+    position: fixed;
+    right: 0;
+    bottom: 0;
 }

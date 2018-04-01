@@ -38,7 +38,7 @@ class RoomList extends Component {
   render() {
     return(
       <section className="container-fluid bg-secondary text-light h-100 p-4 pl-5">
-        <h3>Chat Rooms</h3>
+        <h2>Chat Rooms</h2>
 
         {/* room list */}
         <hr className="room-divider"></hr>
@@ -62,30 +62,23 @@ class RoomList extends Component {
                     <h4 className="modal-title text-dark" id="exampleModalLabel">Create a new room</h4>
                   </div>
                   <div className="modal-body">
-                    <form className="" onSubmit={ (e) => this.handleSubmit(e) }>
-                      <div className="form-group">
-                        <input
-                          type="text"
-                          id="new-room-name"
-                          aria-describedby="room-name-help"
-                          className="form-control mr-2"
-                          placeholder="Enter Name"
-                          maxLength="25"
-                          value={ this.state.newName }
-                          onChange={ (e) => this.handleChange(e) }
-                        />
-                        <small id="room-name-help" className={'form-text ' + (this.state.newName.length === 25 ? 'text-danger' : 'text-muted ')}>{this.state.newName.length}/25 {(this.state.newName.length === 25) ? ' - Please keep it under 25 characters.' : ''}</small>
-                      </div>
-                      <div className="form-group">
-                        <button id="newRoomCancel" type="button" className="btn btn-secondary mr-2" data-dismiss="modal">Cancel</button>
-                        <input className="btn btn-info" id="newRoomSubmit" type="submit"  />
-                      </div>
+                    <form className="form-inline form-group" onSubmit={ (e) => this.handleSubmit(e) }>
+                      <input
+                        type="text"
+                        id="new-room-name"
+                        className="form-control mr-2"
+                        placeholder="Enter Name"
+                        value={ this.state.newName }
+                        onChange={ (e) => this.handleChange(e) }
+                      />
+                      <button id="newRoomCancel" type="button" className="btn btn-secondary mr-2" data-dismiss="modal">Cancel</button>
+                      <input className="btn btn-info" id="newRoomSubmit" type="submit"  />
                     </form>
-                  </div>
-                </div>
               </div>
             </div>
-          </section>
+          </div>
+        </div>
+      </section>
     );
   }
 }

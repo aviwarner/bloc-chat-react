@@ -1,19 +1,32 @@
 import React, { Component } from 'react';
+import moment from 'moment';
 
 class MessageList extends Component {
   constructor(props) {
     super(props);
 
     this.state = {
-      messages: []
+      messages: [],
+      newMessageText: ''
      };
     this.messagesRef = this.props.firebase.database().ref('messages');
   }
 
-  handleChange() {
+  handleChange(e) {
+    this.setState({ newMessageText: e.target.value });
   }
 
-  handleSubmit() {
+  handleSubmit(e) {
+    if (this.state.newMessageText) {
+      this.messagesRef.push({
+        content: this.state.newMessageText,
+        roomId: this.props.activeRoom.key,
+        username: this.props.currentUser,
+        sentAt: Date.now()
+      });
+    }
+    this.setState({newMessageText: ''});
+    e.preventDefault();
   }
 
   componentDidMount() {
@@ -29,17 +42,55 @@ class MessageList extends Component {
     const messages = this.state.messages.filter(m => m.roomId === activeRoom.key);
 
     return(
-      <section className="container-fluid bg-light h-100 p-4">
-        <h3>{this.props.activeRoom ? this.props.activeRoom.name : 'Pick a room'}</h3>
-        <hr className="chat-divider"></hr>
-        {
-          messages.map( (message, index) =>
-            <p key={index}>{message.content}</p>
-          )
-        }
-      </section>
-    );
-  }
-}
+      <section className="container-fluid bg-light pt-1 px-0 chat-window">
+        <div className="container-fluid p-4 pb-4 mb-5">
+          <h3 className="pb-2">{this.props.activeRoom ? this.props.activeRoom.name : 'Pick a room'}</h3>
+          {/* <hr className="chat-divider"></hr> */}
+          <div className="table-responsive">
+            <table className="table table-striped">
+              <tbody>
+                {
+                  messages.map( (message, index) =>
+                    <tr key={index}>
+                      <td>
+                        <small className="small text-muted">{message.username}</small><br />
+                        {message.content}
+                      </td>
+                      <td className="small text-muted">
+                        {moment(message.sentAt).from(Date.now())}
+                      </td>
+                    </tr>
+                  )
+                }
+              </tbody>
+            </table>
+          </div>
+        </div>
+        {activeRoom ?
+          <footer className="footer container-fluid col-8 px-0">
+            <div className="container messagebox mx-0">
+              <form className="form-group row" onSubmit={ (e) => this.handleSubmit(e) }>
+                <div className="col-10">
+                  <input
+                    type="text"
+                    className="form-control"
+                    id="newMessage"
+                    placeholder="message text"
+                    value={this.state.newMessageText}
+                    onChange={ (e) => this.handleChange(e) }
+                  />
+                </div>
+                <div className="col-2">
+                  <input className="btn btn-info" id="newMessageSubmit" type="submit"  />
+                </div>
+              </form>
+            </div>
+          </footer>
+        : ''}
 
-export default MessageList;
+      </section>
+          );
+          }
+          }
+
+          export default MessageList;
