@@ -29,6 +29,13 @@ class MessageList extends Component {
     e.preventDefault();
   }
 
+  delete(key) {
+    const messages = this.state.messages;
+    const m = messages.find(message => message.key === key);
+    this.setState({ messages: messages.filter(message => message !== m) })
+    return this.props.firebase.database().ref('messages/' + key).remove();
+  }
+
   componentDidMount() {
     this.messagesRef.on('child_added', snapshot => {
       const message = snapshot.val();
@@ -56,10 +63,13 @@ class MessageList extends Component {
                         <small className="small text-muted">{message.username}</small><br />
                         {message.content}
                       </td>
-                      <td className="small text-muted">
-                        {moment(message.sentAt).from(Date.now())}
-                      </td>
-                    </tr>
+                      <td className="small text-muted text-right">
+                        {moment(message.sentAt).from(Date.now())}<br />
+                        {message.username === this.props.currentUser ?
+                          <p className="text-danger" onClick={() => this.delete(message.key)}>Delete?</p>
+                          : ''}
+                        </td>
+                      </tr>
                   )
                 }
               </tbody>
