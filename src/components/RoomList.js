@@ -74,11 +74,11 @@ class RoomList extends Component {
                       <button id="newRoomCancel" type="button" className="btn btn-secondary mr-2" data-dismiss="modal">Cancel</button>
                       <input className="btn btn-info" id="newRoomSubmit" type="submit"  />
                     </form>
+                  </div>
+                </div>
               </div>
             </div>
-          </div>
-        </div>
-      </section>
+          </section>
     );
   }
 }

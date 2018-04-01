@@ -7,13 +7,19 @@ class MessageList extends Component {
 
     this.state = {
       messages: [],
-      newMessageText: ''
+      newMessageText: '',
+      editMessageText: '',
+      currentMessageKey: ''
      };
     this.messagesRef = this.props.firebase.database().ref('messages');
   }
 
   handleChange(e) {
     this.setState({ newMessageText: e.target.value });
+  }
+
+  handleEditChange(e) {
+    this.setState({ editMessageText: e.target.value });
   }
 
   handleSubmit(e) {
@@ -34,6 +40,33 @@ class MessageList extends Component {
     const m = messages.find(message => message.key === key);
     this.setState({ messages: messages.filter(message => message !== m) })
     return this.props.firebase.database().ref('messages/' + key).remove();
+  }
+
+  updateContent(e, key, newText) {
+    const messages = this.state.messages;
+    const messagesNew = messages.map( function(message) {
+        if (message.key === key) {
+          message.content = newText;
+          message.edited = true;
+          return message;
+        } else {
+          return message
+        }
+    });
+    this.setState({ messages: messagesNew });
+    e.preventDefault();
+    document.getElementById("editCommentCancel").click();
+    return this.props.firebase.database().ref('messages/' + key).update({
+      content: newText,
+      edited: true
+    });
+  }
+
+  editModal(key, content) {
+    this.setState({
+      currentMessageKey: key,
+      editMessageText: content
+    });
   }
 
   componentDidMount() {
@@ -61,15 +94,18 @@ class MessageList extends Component {
                     <tr key={index}>
                       <td>
                         <small className="small text-muted">{message.username}</small><br />
-                        {message.content}
+                        {message.content}{message.edited ? <small className="text-muted"> - edited</small> : ''}
                       </td>
                       <td className="small text-muted text-right">
                         {moment(message.sentAt).from(Date.now())}<br />
                         {message.username === this.props.currentUser ?
-                          <p className="text-danger" onClick={() => this.delete(message.key)}>Delete?</p>
-                          : ''}
-                        </td>
-                      </tr>
+                          <div>
+                            <a className="text-danger change-message" onClick={() => this.delete(message.key)}>Delete</a> or
+                            <a className="text-primary change-message" onClick={() => this.editModal(message.key, message.content)} data-toggle="modal" data-target="#editCommentModal"> Edit</a>
+                          </div>
+                        : ''}
+                      </td>
+                    </tr>
                   )
                 }
               </tbody>
@@ -97,6 +133,32 @@ class MessageList extends Component {
             </div>
           </footer>
         : ''}
+        {/* edit comment modal */}
+        <div className="modal fade" id="editCommentModal" tabIndex="-1" role="dialog" aria-labelledby="editCommentModalLabel" aria-hidden="true">
+          <div className="modal-dialog" role="document">
+            <div className="modal-content">
+              <div className="modal-header">
+                <h4 className="modal-title text-dark" id="editCommentModalLabel">Edit your comment</h4>
+              </div>
+              <div className="modal-body">
+                <form className="form-group" onSubmit={ (e) => this.updateContent(e, this.state.currentMessageKey, this.state.editMessageText) }>
+                  <input
+                    type="text"
+                    id="new-room-name"
+                    className="form-control mr-2"
+                    value={ this.state.editMessageText }
+                    onChange={ (e) => this.handleEditChange(e) }
+                  />
+                  <div className="mt-2 float-right">
+                    <button id="editCommentCancel" type="button" className="btn btn-secondary mr-2" data-dismiss="modal">Cancel</button>
+                    <input className="btn btn-info" id="editCommentSubmit" type="submit"  />
+                  </div>
+
+                </form>
+              </div>
+            </div>
+          </div>
+        </div>
 
       </section>
           );
